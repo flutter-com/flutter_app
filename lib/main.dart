@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
@@ -71,6 +72,24 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
+    // 1.声明 MethodChannel (唯一的字符串标识符为'samples.story5/utils')
+    const platform = MethodChannel('samples.story5/utils');
+
+    // 处理按钮点击
+    handleButtonClick() async {
+      print("handleButtonClick");
+      int result;
+      // 异常捕获
+      try {
+        // 2异步等待方法通道的调用结果 (方法名为'openAppStore')
+        result = await platform.invokeMethod('openAppStore');
+      } catch (e) {
+        result = -1;
+      }
+      print("Result：$result");
+    }
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -104,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            ElevatedButton(onPressed: handleButtonClick, child: Text("调用原生方法"))
           ],
         ),
       ),
